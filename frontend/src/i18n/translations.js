@@ -69,6 +69,30 @@ const translations = {
       close: "Close",
     },
 
+    faq: {
+      eyebrow: "Common Questions",
+      title: "Frequently asked questions",
+      sub: "A few things patients often ask before their first visit.",
+      items: [
+        {
+          q: "What is homoeopathy?",
+          a: "Homoeopathy is a natural system of medicine based on the principle of \"like cures like.\" It uses highly diluted natural substances to stimulate the body's own healing response, treating the person as a whole rather than just a single symptom.",
+        },
+        {
+          q: "Why use homoeopathy?",
+          a: "Homoeopathic remedies are gentle, safe for all ages, and aim to treat the root cause rather than just suppress symptoms. It's a good option for chronic conditions, allergies, and cases where conventional medicine has produced only temporary relief.",
+        },
+        {
+          q: "Is homoeopathy safe for children and the elderly?",
+          a: "Yes. Homoeopathic medicines are prepared from natural substances in very small doses and are generally well tolerated, making them suitable for infants, children, pregnant women and the elderly under proper guidance.",
+        },
+        {
+          q: "How long does treatment take to show results?",
+          a: "It varies by case. Acute problems may improve within days, while chronic, long-standing conditions can take weeks to months of consistent treatment for lasting results. The doctor will give you a realistic timeline after your first consultation.",
+        },
+      ],
+    },
+
     appt: {
       eyebrow: "Appointment",
       title: "Book your visit",
@@ -233,6 +257,30 @@ const translations = {
       certAlt: "سرٹیفیکیٹ",
       zoomHint: "بڑا دیکھنے کے لیے تھپتھپائیں",
       close: "بند کریں",
+    },
+
+    faq: {
+      eyebrow: "عمومی سوالات",
+      title: "اکثر پوچھے جانے والے سوالات",
+      sub: "چند سوالات جو مریض اکثر پہلی وزٹ سے پہلے پوچھتے ہیں۔",
+      items: [
+        {
+          q: "ہومیوپیتھی کیا ہے؟",
+          a: "ہومیوپیتھی علاج کا ایک قدرتی نظام ہے جو اس اصول پر مبنی ہے کہ \"جیسی بیماری، ویسا علاج\"۔ اس میں انتہائی باریک مقدار میں قدرتی اجزاء استعمال کیے جاتے ہیں جو جسم کی اپنی شفا یابی کی صلاحیت کو متحرک کرتے ہیں، اور صرف ایک علامت کے بجائے پورے مریض کا علاج کیا جاتا ہے۔",
+        },
+        {
+          q: "ہومیوپیتھی کیوں اختیار کریں؟",
+          a: "ہومیوپیتھک ادویات نرم، ہر عمر کے لیے محفوظ اور بیماری کی جڑ تک پہنچ کر علاج کرتی ہیں، نہ کہ صرف علامات کو دباتی ہیں۔ دائمی امراض، الرجی اور ایسے کیسز جن میں روایتی علاج سے صرف عارضی افاقہ ہوا ہو، ان کے لیے یہ ایک بہترین انتخاب ہے۔",
+        },
+        {
+          q: "کیا یہ بچوں اور بزرگوں کے لیے محفوظ ہے؟",
+          a: "جی ہاں۔ ہومیوپیتھک ادویات قدرتی اجزاء سے بہت کم مقدار میں تیار کی جاتی ہیں اور عموماً آسانی سے قبول کی جاتی ہیں، اس لیے مناسب رہنمائی کے ساتھ یہ شیرخوار بچوں، بچوں، حاملہ خواتین اور بزرگوں کے لیے موزوں ہیں۔",
+        },
+        {
+          q: "علاج سے نتائج آنے میں کتنا وقت لگتا ہے؟",
+          a: "یہ ہر کیس پر منحصر ہے۔ عارضی مسائل چند دنوں میں بہتر ہو سکتے ہیں، جبکہ پرانے اور دائمی امراض میں مستقل نتائج کے لیے مسلسل علاج کے ساتھ ہفتوں سے مہینوں تک کا وقت لگ سکتا ہے۔ پہلی مشاورت کے بعد ڈاکٹر آپ کو حقیقت پسندانہ وقت بتائیں گے۔",
+        },
+      ],
     },
 
     appt: {

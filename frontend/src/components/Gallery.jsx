@@ -9,7 +9,11 @@ export default function Gallery() {
   const { t, pick } = useLang();
   const [lightbox, setLightbox] = useState(null); // { src, caption } | null
 
-  const hasClinicPhoto = Boolean(clinic.clinicPhoto);
+  const clinicPhotos = (Array.isArray(clinic.clinicPhoto)
+    ? clinic.clinicPhoto
+    : [clinic.clinicPhoto]
+  ).filter(Boolean);
+  const hasClinicPhotos = clinicPhotos.length > 0;
   const certs = Array.isArray(clinic.certificates) ? clinic.certificates : [];
   const hasCerts = certs.length > 0;
 
@@ -21,7 +25,7 @@ export default function Gallery() {
     return () => window.removeEventListener("keydown", onKey);
   }, [lightbox]);
 
-  if (!hasClinicPhoto && !hasCerts) return null; // nothing to show yet
+  if (!hasClinicPhotos && !hasCerts) return null; // nothing to show yet
 
   return (
     <section id="gallery" className="section section-alt">
@@ -32,20 +36,30 @@ export default function Gallery() {
           <p className="section-sub">{t("gallery.sub")}</p>
         </div>
 
-        {hasClinicPhoto && (
-          <Reveal className="gallery-clinic">
-            <button
-              type="button"
-              className="gallery-clinic-btn"
-              onClick={() =>
-                setLightbox({ src: clinic.clinicPhoto, caption: t("gallery.clinicPhotoAlt") })
-              }
-              aria-label={t("gallery.clinicPhotoAlt")}
-            >
-              <img src={clinic.clinicPhoto} alt={t("gallery.clinicPhotoAlt")} loading="lazy" />
-              <span className="gallery-zoom-hint">{t("gallery.zoomHint")}</span>
-            </button>
-          </Reveal>
+        {hasClinicPhotos && (
+          <div
+            className={
+              clinicPhotos.length > 1
+                ? "gallery-clinic-grid"
+                : "gallery-clinic"
+            }
+          >
+            {clinicPhotos.map((src, i) => (
+              <Reveal key={i} delay={(i % 3) * 80}>
+                <button
+                  type="button"
+                  className="gallery-clinic-btn"
+                  onClick={() =>
+                    setLightbox({ src, caption: t("gallery.clinicPhotoAlt") })
+                  }
+                  aria-label={t("gallery.clinicPhotoAlt")}
+                >
+                  <img src={src} alt={t("gallery.clinicPhotoAlt")} loading="lazy" />
+                  <span className="gallery-zoom-hint">{t("gallery.zoomHint")}</span>
+                </button>
+              </Reveal>
+            ))}
+          </div>
         )}
 
         {hasCerts && (

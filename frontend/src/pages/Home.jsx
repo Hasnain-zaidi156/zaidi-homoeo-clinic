@@ -4,6 +4,7 @@ import About from "../components/About.jsx";
 import Services from "../components/Services.jsx";
 import Gallery from "../components/Gallery.jsx";
 import WhyChoose from "../components/WhyChoose.jsx";
+import FAQ from "../components/FAQ.jsx";
 import Appointment from "../components/Appointment.jsx";
 import Reviews from "../components/Reviews.jsx";
 import Contact from "../components/Contact.jsx";
@@ -20,6 +21,7 @@ export default function Home() {
         <Services />
         <Gallery />
         <WhyChoose />
+        <FAQ />
         <Appointment />
         <Reviews />
         <Contact />

@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
     }
 
     const appointment = await Appointment.create({
-      token: await getNextToken(),
+      token: await getNextToken("appointmentToken"),
       name,
       phone,
       email,

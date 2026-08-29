@@ -164,4 +164,3 @@ Set `CLIENT_ORIGIN` in `.env` to your real domain.
 - Site chalane ke liye: pehle `backend` folder me `npm install` phir `npm start`, dusre terminal me `frontend` folder me `npm install` phir `npm run dev`.
 - **Appointments aur Ratings dekhne** ke liye website par `/admin` kholein aur password daalein — do tabs milenge.
 - Upar right corner me button se **English ⇄ اردو** switch hota hai.
-# zaidi-homoeo-clinic

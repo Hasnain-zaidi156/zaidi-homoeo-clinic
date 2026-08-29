@@ -259,6 +259,7 @@ async function sendConfirmationEmail(appt) {
   return true;
 }
 
+
 // Check the SMTP credentials at startup so problems surface immediately
 // instead of only when the first patient tries to book.
 async function verifyEmail() {

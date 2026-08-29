@@ -692,6 +692,71 @@ html[dir="rtl"] .about-card .ac-quals {
   margin: 0;
 }
 
+/* ============================ FAQ ====================================== */
+.faq-list {
+  max-width: 760px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.faq-item {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+.faq-item.open {
+  border-color: var(--green-600);
+}
+.faq-q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 1.15rem 1.4rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: var(--ink);
+  text-align: start;
+}
+html[dir="rtl"] .faq-q {
+  font-family: var(--font-urdu);
+  font-weight: 600;
+  font-size: 1.15rem;
+}
+.faq-chevron {
+  flex: none;
+  color: var(--green-700);
+  transition: transform 0.25s ease;
+}
+.faq-item.open .faq-chevron {
+  transform: rotate(180deg);
+}
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+.faq-a p {
+  margin: 0;
+  padding: 0 1.4rem 1.15rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+html[dir="rtl"] .faq-a p {
+  font-family: var(--font-urdu);
+  font-size: 1.05rem;
+  line-height: 2;
+}
+
 /* ============================ GALLERY ====================================== */
 .gallery-clinic {
   margin: 0 0 2.4rem;
@@ -781,6 +846,18 @@ html[dir="rtl"] .about-card .ac-quals {
 .gallery-clinic-btn:hover .gallery-zoom-hint,
 .gallery-cert-btn:hover .gallery-zoom-hint {
   opacity: 1;
+}
+.gallery-clinic-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+  margin: 0 0 2.4rem;
+}
+.gallery-clinic-grid .gallery-clinic-btn {
+  max-width: none;
+}
+.gallery-clinic-grid .gallery-clinic-btn img {
+  height: clamp(180px, 22vw, 260px);
 }
 
 /* Lightbox: full-screen overlay for a big view of the clicked image */
@@ -933,6 +1010,7 @@ html[dir="rtl"] .about-card .ac-quals {
   color: #17924a;
   font-weight: 700;
 }
+
 .success-box {
   text-align: center;
   padding: 1.5rem 0.5rem;
@@ -1411,6 +1489,9 @@ table.appts tr:last-child td {
   .gallery-certs-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  .gallery-clinic-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .footer-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -1455,7 +1536,8 @@ table.appts tr:last-child td {
 @media (max-width: 560px) {
   .services-grid,
   .why-grid,
-  .gallery-certs-grid {
+  .gallery-certs-grid,
+  .gallery-clinic-grid {
     grid-template-columns: 1fr;
   }
   .hero-cta {

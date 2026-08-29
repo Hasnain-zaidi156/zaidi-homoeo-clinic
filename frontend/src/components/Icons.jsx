@@ -80,6 +80,12 @@ export const IconStar = (p) => (
 );
 
 /* -------- Service icons (keyed by clinic.js service.icon) ------------------ */
+export const IconChevronDown = (p) => (
+  <svg {...base} {...p}>
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+);
+
 export const serviceIcons = {
   chronic: (p) => (
     <svg {...base} {...p}>

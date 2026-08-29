@@ -29,7 +29,7 @@ const clinic = {
     phone2: "0311 3139170", // secondary
     // WhatsApp number in international format, digits only (0300… → 92300…)
     whatsapp: "923003139170",
-    email: "info@zaidihomoeoclinic.com", // change if you have a different email
+    email: "zaidihomoeoclinic@gmail.com", // change if you have a different email
     address: {
         en: "Dhak Bazar, Rohri, Sindh, Pakistan",
         ur: "ڈھک بازار، روہڑی، سندھ، پاکستان",
@@ -59,7 +59,7 @@ const clinic = {
     },
 
     // Logo (the image you provided)
-    logo: "https://i.ibb.co/yFK23hxf/7324f5e6-a51d-4cb4-a3af-227bad86c9f9.png",
+    logo: "https://i.ibb.co/Cr5FLyK/Untitled-design.png",
 
     // --- Hero medallion: rotating product photos --------------------------
     // The circle on the homepage can show your product photos instead of the
@@ -67,35 +67,38 @@ const clinic = {
     // works best) to https://imgbb.com and paste the links below — 3 or 4 is
     // ideal. Leave the array empty ([]) to keep showing the logo.
     heroImages: [
-        // "https://i.ibb.co/xxxxxxx/product-1.png",
-        // "https://i.ibb.co/xxxxxxx/product-2.png",
-        // "https://i.ibb.co/xxxxxxx/product-3.png",
-        // "https://i.ibb.co/xxxxxxx/product-4.png",
+        "https://i.ibb.co/8LqJ3rrT/05b20b99-c464-40bc-8a99-0a6953f8d8de.png",
+        "https://i.ibb.co/Cr5FLyK/Untitled-design.png",
+        "https://i.ibb.co/C5x4CCXY/8a7c4572-b050-4d5c-b5d3-5dcb26fbcce1.png",
+        "https://i.ibb.co/Cr5FLyK/Untitled-design.png",
+        "https://i.ibb.co/KxxnbMqj/c2c17079-ceed-4b41-b515-9530c50cb50e.png",
+        "https://i.ibb.co/Cr5FLyK/Untitled-design.png",
     ],
 
     // Photo of the doctor (shown in the About section)
     doctorPhoto: "https://i.ibb.co/d0g024Gg/f21fde13-57b0-4a06-997f-b485fa082495.png",
 
-    // --- Gallery: clinic photo + certificates ----------------------------------
+    // --- Gallery: clinic photos + certificates ----------------------------------
     // Upload your images to a free host like https://imgbb.com (same as the
-    // logo/doctorPhoto above), then paste the direct image link here.
-    // Photo of the clinic itself (exterior/interior/reception, etc.)
+    // logo/doctorPhoto above), then paste the direct image links here.
+    // Photos of the clinic itself (exterior/interior/reception, waiting area,
+    // dispensary, etc.) — add as many as you like, the gallery shows them all.
     clinicPhoto: [
-        "",
-
-    ], // e.g. "https://i.ibb.co/xxxxxxx/clinic.jpg"
+        "https://i.ibb.co/ycXbRmdr/image.png",
+        // "https://i.ibb.co/xxxxxxx/clinic-reception.jpg",
+        // "https://i.ibb.co/xxxxxxx/clinic-dispensary.jpg",
+    ],
 
     // Doctor's certificates / degrees / registration documents.
     // Add as many as you like — each needs an "image" link and an optional caption.
-    certificates: [
-        // {
-        //   image: "https://i.ibb.co/xxxxxxx/certificate-1.jpg",
-        //   caption: { en: "DHMS Degree", ur: "ڈی ایچ ایم ایس ڈگری" },
-        // },
-        // {
-        //   image: "https://i.ibb.co/xxxxxxx/certificate-2.jpg",
-        //   caption: { en: "SHCC Registration", ur: "ایس ایچ سی سی رجسٹریشن" },
-        // },
+    certificates: [{
+            image: "https://i.ibb.co/svsJgGxJ/certificate-with-new-photo.png",
+            caption: { en: "Authority Certificate", ur: "اسناد و سرٹیفکیٹس" },
+        },
+        {
+            image: "https://i.ibb.co/8LTc7CPV/03e01a05-f773-4dbd-89b5-b731c12a0f1e.png",
+            caption: { en: "SHCC Registration", ur: "ایس ایچ سی سی رجسٹریشن" },
+        },
     ],
 
     // Small trust points shown in the hero (edit freely; leave value "" to hide)
