@@ -1,71 +1,101 @@
-const nodemailer = require("nodemailer");
-
 // --- Clinic details shown in every email (edit here anytime) ----------------
 const CLINIC = {
-  name: "Zaidi Homoeo Clinic",
-  nameUr: "زیدی ہومیو کلینک",
-  doctor: "Dr. Syed Faraz Ahmed Zaidi",
-  phone: "0300 3139170",
-  phone2: "0311 3139170",
-  address: "Dhak Bazar, Rohri, Sindh, Pakistan",
-  hours: "Morning 10:00 AM – 1:30 PM  •  Evening 5:30 PM – 9:30 PM",
+    name: "Zaidi Homoeo Clinic",
+    nameUr: "زیدی ہومیو کلینک",
+    doctor: "Dr. Syed Faraz Ahmed Zaidi",
+    phone: "0300 3139170",
+    phone2: "0311 3139170",
+    address: "Dhak Bazar, Rohri, Sindh, Pakistan",
+    hours: "Morning 10:00 AM – 1:30 PM  •  Evening 5:30 PM – 9:30 PM",
 };
 
-// --- Detect whether real SMTP credentials have been provided ----------------
-// If the .env still holds the example placeholders (or is empty), we skip
-// sending mail instead of crashing — the appointment is still saved to the DB.
+// --- Detect whether a real Brevo API key has been provided -------------------
+// If BREVO_API_KEY is missing/placeholder, we skip sending mail instead of
+// crashing — the appointment is still saved to the DB either way.
 function isEmailConfigured() {
-  const { EMAIL_USER, EMAIL_PASS } = process.env;
-  if (!EMAIL_USER || !EMAIL_PASS) return false;
-  const placeholders = ["your-email@gmail.com", "your-app-password"];
-  if (placeholders.includes(EMAIL_USER) || placeholders.includes(EMAIL_PASS))
-    return false;
-  return true;
+    const key = process.env.BREVO_API_KEY;
+    if (!key) return false;
+    if (key === "your-brevo-api-key") return false;
+    return true;
 }
 
-let transporter = null;
-function getTransporter() {
-  if (transporter) return transporter;
-  transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || "smtp.gmail.com",
-    port: Number(process.env.EMAIL_PORT) || 587,
-    secure: Number(process.env.EMAIL_PORT) === 465, // 465 = SSL, else STARTTLS
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-  return transporter;
+// The address patients see in "From:" and the address that must be a
+// verified sender in your Brevo account (Settings → Senders & IPs).
+function fromAddress() {
+    return (
+        process.env.EMAIL_FROM ||
+        process.env.CLINIC_EMAIL ||
+        process.env.EMAIL_USER
+    );
+}
+
+// --- Low-level call to Brevo's transactional email HTTP API ------------------
+// Uses plain HTTPS (port 443), which is never blocked — unlike SMTP ports
+// 25/465/587, which Render's free tier blocks outbound as of Sep 2025.
+async function sendViaBrevo({ to, replyTo, subject, text, html }) {
+    const apiKey = process.env.BREVO_API_KEY;
+    if (!apiKey) throw new Error("BREVO_API_KEY is not set");
+
+    const payload = {
+        sender: { name: CLINIC.name, email: fromAddress() },
+        to: [{ email: to }],
+        subject,
+        htmlContent: html,
+        textContent: text,
+    };
+    if (replyTo) payload.replyTo = { email: replyTo };
+
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: {
+            accept: "application/json",
+            "content-type": "application/json",
+            "api-key": apiKey,
+        },
+        body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+        let detail = "";
+        try {
+            detail = JSON.stringify(await res.json());
+        } catch {
+            detail = await res.text();
+        }
+        throw new Error(`Brevo API ${res.status}: ${detail}`);
+    }
+
+    return res.json();
 }
 
 // Escape user-supplied text before putting it inside HTML.
 function esc(v) {
-  return String(v == null ? "" : v).replace(/[<>&]/g, (c) =>
-    c === "<" ? "&lt;" : c === ">" ? "&gt;" : "&amp;"
-  );
+    return String(v == null ? "" : v).replace(/[<>&]/g, (c) =>
+        c === "<" ? "&lt;" : c === ">" ? "&gt;" : "&amp;"
+    );
 }
 
 // Plain-text version of an appointment (used as the email fallback text).
 function formatAppointment(appt) {
-  return [
-    appt.token != null ? `Token:    #${appt.token}` : null,
-    `Name:     ${appt.name}`,
-    `Phone:    ${appt.phone}`,
-    `Email:    ${appt.email || "—"}`,
-    `Service:  ${appt.service || "—"}`,
-    `Date:     ${appt.preferredDate || "—"}`,
-    `Time:     ${appt.preferredTime || "—"}`,
-    `Message:  ${appt.message || "—"}`,
-    ``,
-    `Submitted: ${new Date(appt.createdAt || Date.now()).toLocaleString()}`,
-  ]
-    .filter((line) => line !== null)
-    .join("\n");
+    return [
+            appt.token != null ? `Token:    #${appt.token}` : null,
+            `Name:     ${appt.name}`,
+            `Phone:    ${appt.phone}`,
+            `Email:    ${appt.email || "—"}`,
+            `Service:  ${appt.service || "—"}`,
+            `Date:     ${appt.preferredDate || "—"}`,
+            `Time:     ${appt.preferredTime || "—"}`,
+            `Message:  ${appt.message || "—"}`,
+            ``,
+            `Submitted: ${new Date(appt.createdAt || Date.now()).toLocaleString()}`,
+        ]
+        .filter((line) => line !== null)
+        .join("\n");
 }
 
 // A styled outer shell so every email looks consistent and branded.
 function emailShell(innerHtml) {
-  return `
+    return `
   <div style="background:#f1f5f2;padding:24px 0;font-family:Arial,Helvetica,sans-serif">
     <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #e2e9e3">
       <div style="background:#1f5c43;padding:18px 24px;color:#ffffff">
@@ -85,8 +115,8 @@ function emailShell(innerHtml) {
 
 // Big centered token number.
 function tokenBadge(token) {
-  if (token == null) return "";
-  return `
+    if (token == null) return "";
+    return `
   <div style="text-align:center;margin:8px 0 20px;padding:16px;background:#f6f8f5;border:1px dashed #bcd3c5;border-radius:12px">
     <div style="font-size:12px;color:#5b6b63;letter-spacing:.08em;text-transform:uppercase">Your token number</div>
     <div style="font-size:42px;font-weight:800;color:#1f5c43;line-height:1.15">#${token}</div>
@@ -96,18 +126,17 @@ function tokenBadge(token) {
 
 // Details rows as an HTML table.
 function detailsTable(appt) {
-  const rows = [
-    appt.token != null ? ["Token", `#${appt.token}`] : null,
-    ["Name", appt.name],
-    ["Phone", appt.phone],
-    ["Email", appt.email || "—"],
-    ["Service", appt.service || "—"],
-    ["Preferred date", appt.preferredDate || "—"],
-    ["Preferred time", appt.preferredTime || "—"],
-    ["Message", appt.message || "—"],
-  ].filter(Boolean);
+    const rows = [
+        appt.token != null ? ["Token", `#${appt.token}`] : null, ["Name", appt.name],
+        ["Phone", appt.phone],
+        ["Email", appt.email || "—"],
+        ["Service", appt.service || "—"],
+        ["Preferred date", appt.preferredDate || "—"],
+        ["Preferred time", appt.preferredTime || "—"],
+        ["Message", appt.message || "—"],
+    ].filter(Boolean);
 
-  return `
+    return `
     <table style="border-collapse:collapse;width:100%">
       ${rows
         .map(
@@ -132,7 +161,7 @@ async function sendAppointmentEmail(appt) {
   }
 
   // (a) Notify the clinic inbox.
-  const to = process.env.CLINIC_EMAIL || process.env.EMAIL_USER;
+  const to = process.env.CLINIC_EMAIL || fromAddress();
   const clinicHtml = emailShell(`
     <h2 style="color:#1f5c43;margin:0 0 4px">New appointment request</h2>
     <p style="margin:0 0 16px;color:#5b6b63">Website booking${
@@ -140,8 +169,7 @@ async function sendAppointmentEmail(appt) {
     }</p>
     ${detailsTable(appt)}
   `);
-  await getTransporter().sendMail({
-    from: `"${CLINIC.name}" <${process.env.EMAIL_USER}>`,
+  await sendViaBrevo({
     to,
     replyTo: appt.email || undefined,
     subject: `New appointment${appt.token != null ? ` #${appt.token}` : ""}: ${
@@ -166,8 +194,7 @@ async function sendAppointmentEmail(appt) {
         <p style="margin:18px 0 0;color:#3a4a42">We will confirm your timing with you shortly.</p>
         <p style="margin:6px 0 0;color:#3a4a42" dir="rtl">ہم جلد ہی آپ سے وقت کی تصدیق کریں گے۔ شکریہ!</p>
       `);
-      await getTransporter().sendMail({
-        from: `"${CLINIC.name}" <${process.env.EMAIL_USER}>`,
+      await sendViaBrevo({
         to: appt.email,
         subject: `We received your request${
           appt.token != null ? ` — Token #${appt.token}` : ""
@@ -240,8 +267,7 @@ async function sendConfirmationEmail(appt) {
     <p style="margin:18px 0 0;color:#3a4a42" dir="rtl">آپ کی اپائنٹمنٹ کی تصدیق ہو گئی ہے۔ براہِ کرم مقررہ وقت پر تشریف لائیں۔ شکریہ!</p>
   `);
 
-  await getTransporter().sendMail({
-    from: `"${CLINIC.name}" <${process.env.EMAIL_USER}>`,
+  await sendViaBrevo({
     to: appt.email,
     subject: `Appointment confirmed${
       appt.token != null ? ` — Token #${appt.token}` : ""
@@ -259,12 +285,22 @@ async function sendConfirmationEmail(appt) {
   return true;
 }
 
-
-// Check the SMTP credentials at startup so problems surface immediately
-// instead of only when the first patient tries to book.
+// Check the Brevo API key at startup so problems surface immediately instead
+// of only when the first patient tries to book.
 async function verifyEmail() {
   if (!isEmailConfigured()) return false;
-  await getTransporter().verify();
+  const res = await fetch("https://api.brevo.com/v3/account", {
+    headers: { accept: "application/json", "api-key": process.env.BREVO_API_KEY },
+  });
+  if (!res.ok) {
+    let detail = "";
+    try {
+      detail = JSON.stringify(await res.json());
+    } catch {
+      detail = await res.text();
+    }
+    throw new Error(`Brevo API key check failed (${res.status}): ${detail}`);
+  }
   return true;
 }
 
